@@ -1,12 +1,14 @@
+// src/layout/DashboardLayout.jsx
+
 import React, { useState, useEffect, useCallback } from 'react';
 import { LogIn, TrendingUp, Menu, X, Home, Users, BarChart3, Archive, Mail, Loader2, DollarSign, Check, Zap } from 'lucide-react';
-import { Button, Alert, Card } from '../components/ui'; // Diperbaiki: Ekstensi .jsx dihapus
-import { initialDashboardData, mockNasabahList } from '../data/mocks'; // Diperbaiki: Ekstensi .jsx dihapus
-import { apiClient } from '../api/apiClient'; // Diperbaiki: Ekstensi .jsx dihapus
-import DashboardPage from '../pages/DashboardPage'; // Diperbaiki: Ekstensi .jsx dihapus
-import NasabahPage from '../pages/NasabahPage'; // Diperbaiki: Ekstensi .jsx dihapus
-import ScoringPage from '../pages/ScoringPage'; // Diperbaiki: Ekstensi .jsx dihapus
-import PredictionPage from '../pages/PredictionPage'; // Diperbaiki: Ekstensi .jsx dihapus
+import { Button, Alert, Card } from '../components/ui.jsx'; 
+import { initialDashboardData, mockNasabahList } from '../data/mocks.jsx'; 
+import { apiClient } from '../api/apiClient.jsx'; 
+import DashboardPage from '../pages/DashboardPage.jsx'; 
+import NasabahPage from '../pages/NasabahPage.jsx'; 
+import ScoringPage from '../pages/ScoringPage.jsx'; 
+import PredictionPage from '../pages/PredictionPage.jsx'; 
 
 const Header = ({ onLogout }) => (
     <header className="flex items-center justify-between p-4 bg-white border-b shadow-sm">
@@ -39,7 +41,7 @@ const NavItem = ({ icon: Icon, label, isActive, onClick }) => (
   
 const Sidebar = ({ activeMenu, setActiveMenu, isMobileMenuOpen, setIsMobileMenuOpen }) => {
     const menus = [
-        { name: 'Prediksi Baru', icon: Zap, key: 'predict' }, // Menu baru
+        { name: 'Prediksi Baru', icon: Zap, key: 'predict' },
         { name: 'Statistik & Ringkasan', icon: Home, key: 'dashboard' },
         { name: 'Tabel Lead Nasabah', icon: Users, key: 'nasabah' },
         { name: 'Analisis Scoring', icon: BarChart3, key: 'scoring' },
@@ -49,7 +51,7 @@ const Sidebar = ({ activeMenu, setActiveMenu, isMobileMenuOpen, setIsMobileMenuO
 
     return (
         <>
-        {/* Toggle button untuk mobile */}
+        {/* Toggle menu untuk tampilan mobile */}
         <div className="md:hidden p-4 border-b bg-white">
             <Button variant="outline" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="w-full">
             {isMobileMenuOpen ? <X className="h-5 w-5 mr-2" /> : <Menu className="h-5 w-5 mr-2" />}
@@ -57,7 +59,7 @@ const Sidebar = ({ activeMenu, setActiveMenu, isMobileMenuOpen, setIsMobileMenuO
             </Button>
         </div>
 
-        {/* Sidebar utama */}
+        {/* Sidebar Navigasi */}
         <nav
             className={`fixed inset-y-0 left-0 z-30 w-64 bg-gray-50 p-4 transition-transform transform md:translate-x-0 ${
                 isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
@@ -73,13 +75,12 @@ const Sidebar = ({ activeMenu, setActiveMenu, isMobileMenuOpen, setIsMobileMenuO
                         isActive={activeMenu === menu.key}
                         onClick={() => {
                             setActiveMenu(menu.key);
-                            setIsMobileMenuOpen(false); // Tutup menu setelah klik di mobile
+                            setIsMobileMenuOpen(false);
                         }}
                     />
                 ))}
             </ul>
         </nav>
-        {/* Overlay untuk mobile saat menu terbuka */}
         {isMobileMenuOpen && (
             <div
                 className="fixed inset-0 bg-black opacity-50 z-20 md:hidden"
@@ -95,7 +96,7 @@ const ContentView = ({ activeMenu, dashboardData, nasabahList, fetchNasabahList,
     const conversionRate = totalNasabah > 0 ? (dashboardData.prediction_summary.positive / totalNasabah) * 100 : 0;
     
     switch (activeMenu) {
-        case 'predict': // Kasus baru
+        case 'predict':
             return <PredictionPage token={token} fetchNasabahList={fetchNasabahList} />;
         case 'dashboard':
             return <DashboardPage summary={dashboardData} totalNasabah={totalNasabah} conversionRate={conversionRate} />;
@@ -104,41 +105,37 @@ const ContentView = ({ activeMenu, dashboardData, nasabahList, fetchNasabahList,
         case 'scoring':
             return <ScoringPage summary={dashboardData} />;
         case 'memo':
-            return <Card title="Memo & Catatan" description="Halaman untuk mencatat interaksi lead."><div className="p-4 text-gray-500 italic">Fitur pengembangan selanjutnya: Editor Memo dan Manajemen Catatan.</div></Card>;
+            return <Card title="Memo & Catatan" description="Halaman untuk mencatat interaksi lead."><div className="p-4 text-gray-500 italic">Fitur pengembangan selanjutnya.</div></Card>;
         case 'email':
-            return <Card title="Email Marketing" description="Halaman untuk mengelola kampanye email lead."><div className="p-4 text-gray-500 italic">Fitur pengembangan selanjutnya: Template Email dan Integrasi Marketing.</div></Card>;
+            return <Card title="Email Marketing" description="Halaman untuk mengelola kampanye email lead."><div className="p-4 text-gray-500 italic">Fitur pengembangan selanjutnya.</div></Card>;
         default:
             return <DashboardPage summary={dashboardData} totalNasabah={totalNasabah} conversionRate={conversionRate} />;
     }
 };
 
 const DashboardLayout = ({ onLogout, token }) => {
-    const [activeMenu, setActiveMenu] = useState('predict'); // Default ke halaman prediksi
+    const [activeMenu, setActiveMenu] = useState('predict');
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [dashboardData, setDashboardData] = useState(initialDashboardData);
     const [nasabahList, setNasabahList] = useState([]);
-    const [isLoading, setIsLoading] = useState(false); // Atur ke false agar user bisa langsung ke form prediksi
-    const [error, setError] = useState(null); // Variabel error dideklarasikan di sini
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState(null);
 
-    // Fungsi fetch data dashboard
+    // Fungsi untuk mengambil data dashboard dari API
     const fetchDashboardData = useCallback(async () => {
-        // Hanya fetch data dashboard jika activeMenu bukan 'predict' atau setelah prediksi berhasil
         if (!token) return; 
 
         setIsLoading(true);
         try {
-            // GET /api/admin/summary 
             const summaryRes = await apiClient('/api/admin/summary', 'GET', null, token);
-            // GET /api/nasabah?limit=10
             const nasabahRes = await apiClient('/api/nasabah?limit=10', 'GET', null, token); 
 
             setDashboardData(summaryRes.data);
             setNasabahList(nasabahRes.data || []);
-            setError(null); // Clear error on success
+            setError(null);
             
         } catch (err) {
-            console.warn("Using mock data due to API failure on dashboard fetch.", err);
-            // Menampilkan data simulasi
+            console.warn("Gagal memuat data dari API, menggunakan data simulasi.", err);
             setDashboardData({
                 ...initialDashboardData,
                 total_nasabah: 5,
@@ -146,23 +143,22 @@ const DashboardLayout = ({ onLogout, token }) => {
                 call_tracking_summary: { pending: 2, called: 1, failed: 1, not_interested: 1, success: 0 }
             });
             setNasabahList(mockNasabahList);
-            // Set error hanya jika bukan saat pertama kali masuk ke halaman predict
-            if(activeMenu !== 'predict') setError('Gagal memuat data dari API. Menampilkan data simulasi. Harap periksa koneksi atau token.');
+            if(activeMenu !== 'predict') {
+                setError('Gagal memuat data dari API. Menampilkan data simulasi.');
+            }
         } finally {
             setIsLoading(false);
         }
     }, [token, activeMenu]);
 
+    // Efek untuk memicu pengambilan data saat menu aktif berubah
     useEffect(() => {
-        // Panggil fetchDashboardData hanya jika bukan halaman prediksi saat pertama kali, atau ketika token berubah
-        if (token && activeMenu !== 'predict') {
+        if (token && (activeMenu === 'dashboard' || activeMenu === 'nasabah' || activeMenu === 'scoring')) {
             fetchDashboardData();
-        } else if (token && activeMenu === 'dashboard') {
-             fetchDashboardData();
         }
     }, [token, activeMenu, fetchDashboardData]);
 
-    // Jika sedang loading data dashboard (bukan loading awal App), tampilkan loader
+    // Tampilan Loading
     if (isLoading && activeMenu !== 'predict') {
         return (
             <div className="min-h-screen flex items-center justify-center bg-gray-50">

@@ -42,11 +42,11 @@ export const LoginForm = ({ onLoginSuccess, onViewChange }) => {
         <Alert message={error} type="error" />
         <div>
           <label className="text-sm font-medium leading-none mb-1 block">Email</label>
-          <Input type="email" placeholder="admin@example.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
+          <Input type="email" placeholder="admin@example.com" onChange={(e) => setEmail(e.target.value)} required />
         </div>
         <div>
           <label className="text-sm font-medium leading-none mb-1 block">Password</label>
-          <Input type="password" placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)} required />
+          <Input type="password" placeholder="••••••••" onChange={(e) => setPassword(e.target.value)} required />
         </div>
         <Button type="submit" className="w-full" disabled={isLoading}>
           {isLoading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
