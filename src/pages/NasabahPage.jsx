@@ -1,5 +1,3 @@
-// src/pages/NasabahPage.jsx
-
 import React, { useState } from 'react';
 import { Card, Button, Alert } from '../components/ui'; 
 import { Loader2, Phone } from 'lucide-react';
@@ -137,5 +135,6 @@ const NasabahPage = ({ nasabahList, fetchList, token }) => {
       </div>
     );
 };
+
 
 export default NasabahPage;
