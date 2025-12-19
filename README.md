@@ -11,9 +11,7 @@ Aplikasi frontend ini dibangun sebagai Single Page Application (SPA) dengan Reac
 **Framework:** React (Vite)
 **Styling & UI:** Tailwind CSS, Shadcn UI (Custom Components)
 **Visualisasi Data:** Chart.js (untuk menampilkan statistik lead)
-
 **Backend & API**
-
 **Layanan:** Node.js / Express (asumsi)
 **Model ML:** Terintegrasi melalui endpoint /api/predict
 
@@ -23,8 +21,9 @@ Karena proyek ini dikembangkan sebagai aplikasi React standar, berikut langkah-l
 
 **Clone Repositori:**
 
-```git clone [LINK_REPOSITORY_ANDA]
-cd predictive-leadscoring-bank
+```
+git clone [LINK_REPOSITORY]
+cd capstone-asah-frontend-main
 
 
 Instalasi Dependensi:
